@@ -15,7 +15,11 @@ class CreateRevenuesTable extends Migration
     {
         Schema::create('revenues', function (Blueprint $table) {
             $table->id();
-            
+            $table->float('sale_price', 6,2);
+            $table->float('purchase_price', 6,2);
+            $table->float('revenue', 6,2);
+            $table->integer('percentage_revenue');
+            $table->integer('owner_revenue');
             $table->timestamps();
         });
     }
