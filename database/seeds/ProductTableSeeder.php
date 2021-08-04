@@ -25,7 +25,8 @@ class ProductTableSeeder extends Seeder
             $newproduct = new Product();
             $newproduct->name_product = $product['name_product'];
             $newproduct->brand = $product['brand'];
-            $newproduct->slug = Str::slug($product['name_product'], '-');
+            $slug = $product['name_product'] . " " . $product['brand'];
+            $newproduct->slug = Str::slug($slug, '-');
             $newproduct->typology = $product['typology'];
             
             $newproduct->save();
