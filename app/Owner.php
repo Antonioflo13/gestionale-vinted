@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Owner extends Model
 {
-    //
+    public function revenue() {
+        return $this->belongsTo('App\Revenue');
+    }
 }
