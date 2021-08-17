@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOwnersTable extends Migration
+class CreateCostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateOwnersTable extends Migration
      */
     public function up()
     {
-        Schema::create('owners', function (Blueprint $table) {
+        Schema::create('costs', function (Blueprint $table) {
             $table->id();
-            $table->string('owner_name',100);
-            $table->string('owner_surname',100);
-            $table->integer('owner_percentage');
+            $table->string('typology', 100);
+            $table->float('cost_price', 6,2);
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateOwnersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('owners');
+        Schema::dropIfExists('costs');
     }
 }

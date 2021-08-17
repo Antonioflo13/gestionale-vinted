@@ -12,4 +12,7 @@ class Revenue extends Model
     public function owner() {
         return $this->belongsTo('App\Owner');
     }
+    public function partner() {
+        return $this->belongsTo('App\Partner');
+    }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ForeignOwnersTable extends Migration
+class CreateForeignOwnersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +14,12 @@ class ForeignOwnersTable extends Migration
     public function up()
     {
         Schema::table('owners', function (Blueprint $table) {
-            $table->unsignedBigInteger('owner_id')
+            $table->unsignedBigInteger('product_id')
             ->nullable()
             ->after('id');
-            $table->foreign('owner_id')
+            $table->foreign('product_id')
             ->references('id')
-            ->on('revenues')
+            ->on('products')
             ->onDelete('SET NULL');
         });
     }
@@ -32,8 +32,8 @@ class ForeignOwnersTable extends Migration
     public function down()
     {
         Schema::table('owners', function (Blueprint $table) {
-            $table->dropForeign('owner_revenue_id_foreign');
-            $table->dropColumn('owner_id');
+            $table->dropForeign('owner_product_id_foreign');
+            $table->dropColumn('product_id');
         });
     }
 }
