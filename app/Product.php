@@ -6,12 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    protected $fillable = [
+        'name_product',
+        'brand',
+        'typology',
+        'slug'
+    ];
+
     public function revenue() {
         return $this->hasOne('App\Revenue');
     }
 
     public function owner() {
-        return $this->belongsTo('App\Owner');
+        return $this->hasOne('App\Owner');
     }
 
     public function cost() {
@@ -23,6 +30,6 @@ class Product extends Model
     }
 
     public function shipment() {
-        return $this->belongsTo('App\Shipment');
+        return $this->hasOne('App\Shipment');
     }
 }

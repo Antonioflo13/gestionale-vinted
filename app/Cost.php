@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cost extends Model
 {
+    protected $fillable = [
+        'typology',
+        'cost_price',
+    ];
+
     public function partner() {
         return $this->belongsTo('App\Partner');
     }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Partner extends Model
 {
+
     public function cost() {
         return $this->hasOne('App\Cost');
     }
