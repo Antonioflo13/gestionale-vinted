@@ -10,11 +10,11 @@ class Product extends Model
         'name_product',
         'brand',
         'typology',
-        'slug'
+        'slug',
     ];
 
     public function revenue() {
-        return $this->hasOne('App\Revenue');
+        return $this->belongsTo('App\Revenue');
     }
 
     public function owner() {

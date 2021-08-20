@@ -15,7 +15,7 @@ class Revenue extends Model
     ];
 
     public function product() {
-        return $this->belongsTo('App\Product');
+        return $this->hasOne('App\Product');
     }
     public function owner() {
         return $this->belongsTo('App\Owner');

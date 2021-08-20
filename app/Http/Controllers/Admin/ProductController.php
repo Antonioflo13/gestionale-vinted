@@ -69,19 +69,18 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+
         $messages = [
             'required' => 'Campo Obbligatorio',
             'numeric' => 'Campo Numerico',
             'max' => 'Puoi inserire fino a :max caratteri'
         ];
+
         $request->validate($this->productValidationArray, $messages);
+
         
-        $newProduct = new Product();
-        $newProduct = new Owner();
-        $newProduct = new Shipment();
-        $newProduct = new Revenue();
-        $newProduct = new Cost();
-        $newProduct = new Client();
+        
+        
 
         $slug = $data['name_product'] . " " . $data['brand'];
         $slug = Str::slug($slug, '-');
@@ -97,11 +96,43 @@ class ProductController extends Controller
         $data['owner_revenue'] = $owner_revenue;
         // dd($data);
 
-        $newProduct->fill($data);
+        $newRevenue = new Revenue();
+        $newRevenue->sale_price = $data['sale_price'];
+        $newRevenue->purchase_price = $data['purchase_price'];
+        $newRevenue->revenue = $revenue;
+        $newRevenue->percentage_revenue = $percentage_revenue;
+        $newRevenue->owner_revenue = $owner_revenue;
+        $newRevenue->save();
         
+        $newProduct = new Product();
+        $newProduct->revenue_id = $newRevenue->id;
+        $newProduct->name_product = $data['name_product'];
+        $newProduct->brand = $data['brand'];
+        $newProduct->typology = $data['typology'];
+        $newProduct->slug = $slug;
         $newProduct->save();
-        // dd($newProduct);
 
+        $newOwner = new Owner();
+        $newOwner->product_id = $newProduct->id;
+        $newOwner->owner_name = $data['owner_name'];
+        $newOwner->owner_surname = $data['owner_surname'];
+        $newOwner->owner_percentage = $data['owner_percentage'];
+        $newOwner->save();
+        
+        $newShipment = new Shipment();
+        $newShipment->product_id = $newProduct->id;
+        $newShipment->label_code = $data['label_code'];
+        $newShipment->save();
+
+        $newCost = new Cost();
+        $newCost->typology = $data['typology'];
+        $newCost->cost_price = $data['cost_price'];
+        $newCost->save();
+
+            $newClient = new Client();
+            $newClient->username = $data['username'];
+            $newClient->save();
+        
         return redirect()->route('admin.products.show', $newProduct->id);
 
     }

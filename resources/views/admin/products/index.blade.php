@@ -21,7 +21,7 @@
                         <td>{{ $product->owner->owner_name }}</td>
                         <td>{{ $product->owner->owner_surname }}</td>
                         <td><a href="{{ route ('admin.products.show', $product->id) }}" class="btn btn-info btn-sm">Vai al dettaglio</a></td>
-                        <td><a href="{{ route ('admin.products.create') }}" class="btn btn-secondary btn-sm">Vai al dettaglio</a></td>
+                        <td><a href="{{ route ('admin.products.create') }}" class="btn btn-secondary btn-sm">Crea Prodotto</a></td>
                     <tr>
                 @endforeach
             </tbody>
