@@ -44,24 +44,25 @@ class ProductController extends Controller
         return $slug;
     }
 
-    private function calculateRevenue($data) {
-        $revenue = $data['sale_price'] - $data['purchase_price'];
-
-        return $revenue;
-    }
-
-    private function calculatePercentageRevenue($data) {
-        $percentage_revenue = ($data['revenue'] * 100 ) / $data['purchase_price'];
-
-        return $percentage_revenue;
-    }
-
+    
+    
     private function calculateOwnerRevenue($data) {
         $owner_revenue = ($data['sale_price'] / 100 )* $data['owner_percentage'];
         
         return $owner_revenue;
     } 
+    private function calculateRevenue($data) {
+        $owner_revenue = $this->calculateOwnerRevenue($data);
+        $revenue = $data['sale_price'] - $data['purchase_price'] - $owner_revenue;
+        
+        return $revenue;
+    }
     
+    private function calculatePercentageRevenue($data) {
+        $percentage_revenue = ($data['revenue'] * 100 ) / $data['purchase_price'];
+        
+        return $percentage_revenue;
+    }
 
 
     /**
