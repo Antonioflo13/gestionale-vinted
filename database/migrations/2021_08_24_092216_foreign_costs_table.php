@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductsForeignTable extends Migration
+class ForeignCostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateProductsForeignTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->unsignedBigInteger('owner_id')
+        Schema::table('costs', function (Blueprint $table) {
+            $table->unsignedBigInteger('product_id')
             ->nullable()
             ->after('id');
-            $table->foreign('owner_id')
+            $table->foreign('product_id')
             ->references('id')
-            ->on('owners')
+            ->on('products')
             ->onDelete('SET NULL');
         });
     }
@@ -31,9 +31,9 @@ class CreateProductsForeignTable extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropForeign('products_owner_id_foreign');
-            $table->dropColumn('owner_id');
+        Schema::table('costs', function (Blueprint $table) {
+            $table->dropForeign('costs_product_id_foreign');
+            $table->dropColumn('product_id');
         });
     }
 }

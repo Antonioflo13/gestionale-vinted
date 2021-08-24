@@ -16,6 +16,8 @@
         <p>{{ $product->revenue->percentage_revenue }}</p>
         <h5>Codice spedizione</h5>
         <p>{{ $product->shipment->label_code }}</p>
+        <h5>Cliente</h5>
+        <p>{{ $product->client->username }}</p>
         <a href="{{ route('admin.products.index') }}" class="btn btn-info">Torna all'elenco</a>
 
     </section>

@@ -22,11 +22,11 @@ class Product extends Model
     }
 
     public function cost() {
-        return $this->belongsTo('App\Cost');
+        return $this->hasOne('App\Cost');
     }
 
     public function client() {
-        return $this->belongsTo('App\Client');
+        return $this->hasOne('App\Client');
     }
 
     public function shipment() {

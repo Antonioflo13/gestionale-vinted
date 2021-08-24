@@ -11,6 +11,6 @@ class Client extends Model
     ];
 
     public function product() {
-        return $this->hasMany('App\Product');
+        return $this->belongsTo('App\Product');
     }
 }

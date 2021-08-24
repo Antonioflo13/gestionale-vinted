@@ -31,6 +31,38 @@ class ProductController extends Controller
         'username' => 'required|max:100'
     ];
 
+    private $messages = [
+        'required' => 'Campo Obbligatorio',
+        'numeric' => 'Campo Numerico',
+        'max' => 'Puoi inserire fino a :max caratteri'
+    ];
+
+    private function generateSlug($data) {
+        $slug = $data['name_product'] . " " . $data['brand'];
+        $slug = Str::slug($slug, '-');
+
+        return $slug;
+    }
+
+    private function calculateRevenue($data) {
+        $revenue = $data['sale_price'] - $data['purchase_price'];
+
+        return $revenue;
+    }
+
+    private function calculatePercentageRevenue($data) {
+        $percentage_revenue = ($data['revenue'] * 100 ) / $data['purchase_price'];
+
+        return $percentage_revenue;
+    }
+
+    private function calculateOwnerRevenue($data) {
+        $owner_revenue = ($data['sale_price'] / 100 )* $data['owner_percentage'];
+        
+        return $owner_revenue;
+    } 
+    
+
 
     /**
      * Display a listing of the resource.
@@ -70,37 +102,20 @@ class ProductController extends Controller
     {
         $data = $request->all();
 
-        $messages = [
-            'required' => 'Campo Obbligatorio',
-            'numeric' => 'Campo Numerico',
-            'max' => 'Puoi inserire fino a :max caratteri'
-        ];
-
-        $request->validate($this->productValidationArray, $messages);
-
-        
-        
-        
-
-        $slug = $data['name_product'] . " " . $data['brand'];
-        $slug = Str::slug($slug, '-');
-        $data['slug'] = $slug;
-
-        $revenue = $data['sale_price'] - $data['purchase_price'];
-        $data['revenue'] = $revenue;
-
-        $percentage_revenue = ($data['sale_price'] / $data['revenue'] )* 100;
-        $data['percentage_revenue'] = $percentage_revenue;
+        $request->validate($this->productValidationArray, $this->messages);
         
         $owner_revenue = ($data['sale_price'] / 100 )* $data['owner_percentage'];
         $data['owner_revenue'] = $owner_revenue;
-        // dd($data);
 
         $newRevenue = new Revenue();
         $newRevenue->sale_price = $data['sale_price'];
         $newRevenue->purchase_price = $data['purchase_price'];
+        $revenue = $this->calculateRevenue($data);
+        $data['revenue'] = $revenue;
         $newRevenue->revenue = $revenue;
+        $percentage_revenue = $this->calculatePercentageRevenue($data);
         $newRevenue->percentage_revenue = $percentage_revenue;
+        $owner_revenue = $this->calculateOwnerRevenue($data);
         $newRevenue->owner_revenue = $owner_revenue;
         $newRevenue->save();
         
@@ -109,6 +124,7 @@ class ProductController extends Controller
         $newProduct->name_product = $data['name_product'];
         $newProduct->brand = $data['brand'];
         $newProduct->typology = $data['typology'];
+        $slug = $this->generateSlug($data);
         $newProduct->slug = $slug;
         $newProduct->save();
 
@@ -125,13 +141,15 @@ class ProductController extends Controller
         $newShipment->save();
 
         $newCost = new Cost();
+        $newCost->product_id = $newProduct->id;
         $newCost->typology = $data['typology'];
         $newCost->cost_price = $data['cost_price'];
         $newCost->save();
 
-            $newClient = new Client();
-            $newClient->username = $data['username'];
-            $newClient->save();
+        $newClient = new Client();
+        $newClient->product_id = $newProduct->id;
+        $newClient->username = $data['username'];
+        $newClient->save();
         
         return redirect()->route('admin.products.show', $newProduct->id);
 
@@ -154,9 +172,15 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Product $product)
     {
-        //
+        $owner = Owner::all();
+        $shipment = Shipment::all();
+        $revenue = Revenue::all();
+        $cost = Cost::all();
+        $client = Client::all();
+
+        return view('admin.products.edit', compact('product', 'owner', 'shipment', 'revenue', 'cost', 'client'));
     }
 
     /**
@@ -166,9 +190,42 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
-        //
+        $data = $request->all();
+        $request->validate($this->productValidationArray, $this->messages);
+
+        $product->revenue->sale_price = $data['sale_price'];
+        $product->revenue->purchase_price = $data['purchase_price'];
+        $revenue = $this->calculateRevenue($data);
+        $data['revenue'] = $revenue;
+        $product->revenue->revenue = $revenue;
+        $product->revenue->percentage_revenue = $this->calculatePercentageRevenue($data);
+        $product->revenue->owner_revenue = $this->calculateOwnerRevenue($data);
+        $product->revenue->update();
+
+        $product->name_product = $data['name_product'];
+        $product->brand = $data['brand'];
+        $product->typology = $data['typology'];
+        $product->slug = $this->generateSlug($data);
+        $product->update();
+
+        $product->owner->owner_name = $data['owner_name'];
+        $product->owner->owner_surname = $data['owner_surname'];
+        $product->owner->owner_percentage = $data['owner_percentage'];
+        $product->owner->update();
+        
+        $product->shipment->label_code = $data['label_code'];
+        $product->shipment->update();
+
+        $product->cost->typology = $data['typology'];
+        $product->cost->cost_price = $data['cost_price'];
+        $product->cost->update();
+
+        $product->client->username = $data['username'];
+        $product->client->update();
+
+        return redirect()->route('admin.products.show', $product->id);
     }
 
     /**
@@ -177,8 +234,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        //
+        $product->delete();
+        return redirect()->route('admin.products.index');
     }
 }

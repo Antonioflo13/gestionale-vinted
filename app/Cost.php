@@ -16,6 +16,6 @@ class Cost extends Model
     }
 
     public function cost() {
-        return $this->hasOne('App\Product');
+        return $this->belongsTo('App\Product');
     }
 }
