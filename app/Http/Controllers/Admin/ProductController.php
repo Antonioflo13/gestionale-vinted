@@ -127,7 +127,7 @@ class ProductController extends Controller
         $slug = $this->generateSlug($data);
         $newProduct->slug = $slug;
         $newProduct->save();
-
+        
         $newOwner = new Owner();
         $newOwner->product_id = $newProduct->id;
         $newOwner->owner_name = $data['owner_name'];
