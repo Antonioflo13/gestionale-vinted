@@ -28,6 +28,6 @@ Route::middleware('auth')
 });
 
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('guestHome');
 
 
