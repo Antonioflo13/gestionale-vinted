@@ -20,7 +20,7 @@ class PaymentController extends Controller
     public function makePayment(PaymentRequest $paymentrequest, Gateway $gateway) {
         $result = $gateway->transaction()->sale([
             'amount' => $paymentrequest->amount,
-            'PaymentMethodNonce' => $paymentrequest->token,
+            'paymentMethodNonce' => $paymentrequest->token,
             'options' => [
                 'submitForSettlement' => true,
             ]
@@ -37,7 +37,7 @@ class PaymentController extends Controller
                 'success' => false,
                 'message' => 'Pagamento non effettuato!'
             ];
-            return response()->json($data,400);
+            return response()->json($data,401);
         }
     }
 }
