@@ -21,8 +21,7 @@ class HomeController extends Controller
             $totalRevenue += $product->revenue->revenue;
         }
         $local = Http::get('https://api.tomtom.com/search/2/search/Via%20Ravenna.json?query=Ostuni via ravenna&ext=.json&key=ubO6kthk3bpiLfR8uiFmtyF9dnZxYok3');
-        $long = $local['results']['0']['position'];
-        dd($long);
+        $long = $local['results']['0']['position']['lon'];
         return view('admin.home', compact('currentMonth','startMonth','endMonth','totalRevenue', 'long'));
     }
 }
